@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Encriptador de Enlaces con Firebase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+    .result-card {
+      transition: all 0.3s ease;
+    }
+    .result-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    }
+    .success-message {
+      animation: fadeInOut 3s ease-in-out;
+    }
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; }
+      10%, 90% { opacity: 1; }
+    }
+    .copy-btn {
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-4xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2">🔒 Encriptador de Enlaces con Firebase</h1>
+      <p class="text-white opacity-80">Guarda tus enlaces de forma segura y recupéralos con tu palabra clave</p>
+    </div>
+
+    <div class="glass-effect p-6 md:p-8">
+      <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">➕ Agregar Nuevo Enlace</h2>
+        <form id="addForm" class="space-y-4">
+          <div>
+            <label class="block text-white mb-2">URL del enlace:</label>
+            <input type="url" id="urlInput" required
+              class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+              placeholder="" />
+          </div>
+          <div>
+            <label class="block text-white mb-2">Título (opcional):</label>
+            <input type="text" id="titleInput"
+              class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+              placeholder="" />
+          </div>
+          <div>
+            <label class="block text-white mb-2">Palabra clave para encriptar:</label>
+            <input type="password" id="encryptKey" required
+              class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+              placeholder="" />
+          </div>
+          <button type="submit"
+            class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
+            🔒 Encriptar y Guardar
+          </button>
+        </form>
+      </div>
+
+      <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">🔍 Buscar Enlaces</h2>
+        <div class="flex gap-2">
+          <input type="password" id="searchKey"
+            class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+            placeholder="" />
+          <button onclick="searchLinks()"
+            class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-200">
+            🔍 Buscar
+          </button>
+        </div>
+      </div>
+
+      <div id="results" class="space-y-4 hidden">
+        <h2 class="text-2xl font-semibold text-white mb-4">📋 Resultados Encontrados</h2>
+        <div id="resultsContainer"></div>
+      </div>
+
+      <div id="successMessage"
+        class="success-message fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hidden">
+        ¡Operación completada con éxito!
+      </div>
+    </div>
+
+    <div class="text-center mt-8 text-white opacity-60">
+      <p>© 2025 Encriptador de Enlaces Seguros con Firebase</p>
+    </div>
+  </div>
+
+  <script>
+    // Configuración Firebase
+    const firebaseConfig = {
+      databaseURL: "https://clav-2da48-default-rtdb.firebaseio.com/"
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Encriptar datos
+    function encryptData(data, key) {
+      try {
+        return CryptoJS.AES.encrypt(data, key).toString();
+      } catch (e) {
+        console.error("Error al encriptar:", e);
+        return null;
+      }
+    }
+
+    // Desencriptar datos
+    function decryptData(encryptedData, key) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(encryptedData, key);
+        return bytes.toString(CryptoJS.enc.Utf8);
+      } catch (e) {
+        console.error("Error al desencriptar:", e);
+        return null;
+      }
+    }
+
+    // Guardar enlace en Firebase
+    document.getElementById("addForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const url = document.getElementById("urlInput").value.trim();
+      const title = document.getElementById("titleInput").value.trim() || "Sin título";
+      const key = document.getElementById("encryptKey").value;
+
+      if (!url || !key) {
+        alert("Por favor, completa todos los campos requeridos");
+        return;
+      }
+
+      const encryptedUrl = encryptData(url, key);
+      const encryptedTitle = encryptData(title, key);
+
+      if (!encryptedUrl || !encryptedTitle) {
+        alert("Error al encriptar los datos. Intenta con una clave diferente.");
+        return;
+      }
+
+      // Guardar bajo nodo 'links'
+      const newLinkRef = database.ref("links").push();
+      newLinkRef
+        .set({
+          encryptedUrl,
+          encryptedTitle,
+          timestamp: new Date().toISOString(),
+        })
+        .then(() => {
+          showSuccess("¡Enlace guardado exitosamente!");
+          this.reset();
+        })
+        .catch((error) => {
+          alert("Error al guardar en la base de datos: " + error.message);
+        });
+    });
+
+    // Buscar enlaces en Firebase y desencriptar
+    function searchLinks() {
+      const key = document.getElementById("searchKey").value;
+      if (!key) {
+        alert("Por favor, ingresa una palabra clave");
+        return;
+      }
+
+      const resultsContainer = document.getElementById("resultsContainer");
+      resultsContainer.innerHTML = "";
+      document.getElementById("results").classList.add("hidden");
+
+      database
+        .ref("links")
+        .once("value")
+        .then((snapshot) => {
+          const data = snapshot.val();
+          if (!data) {
+            alert("No hay enlaces guardados.");
+            return;
+          }
+
+          let foundLinks = 0;
+          Object.values(data).forEach((link) => {
+            const decryptedUrl = decryptData(link.encryptedUrl, key);
+            const decryptedTitle = decryptData(link.encryptedTitle, key);
+
+            if (decryptedUrl && decryptedTitle) {
+              foundLinks++;
+              const card = document.createElement("div");
+              card.className = "result-card glass-effect p-4";
+              card.innerHTML = `
+                <h3 class="text-lg font-semibold text-white mb-2">${decryptedTitle}</h3>
+                <p class="text-white/80 text-sm mb-3">Guardado: ${new Date(link.timestamp).toLocaleString()}</p>
+                <div class="flex items-center justify-between">
+                  <a href="${decryptedUrl}" target="_blank" 
+                     class="text-cyan-300 hover:text-cyan-200 underline truncate max-w-xs">
+                    ${decryptedUrl}
+                  </a>
+                  <button onclick="copyToClipboard('${decryptedUrl}')" 
+                          class="copy-btn bg-white/20 text-white px-3 py-1 rounded-lg text-sm hover:bg-white/30">
+                    📋 Copiar
+                  </button>
+                </div>
+              `;
+              resultsContainer.appendChild(card);
+            }
+          });
+
+          if (foundLinks > 0) {
+            document.getElementById("results").classList.remove("hidden");
+            showSuccess(`Se encontraron ${foundLinks} enlace(s)`);
+          } else {
+            alert("No se encontraron enlaces con esa palabra clave");
+          }
+        })
+        .catch((error) => {
+          alert("Error al leer la base de datos: " + error.message);
+        });
+    }
+
+    // Copiar al portapapeles
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showSuccess("¡Enlace copiado al portapapeles!");
+      }).catch((err) => {
+        console.error("Error al copiar:", err);
+      });
+    }
+
+    // Mostrar mensaje de éxito
+    function showSuccess(message) {
+      const successEl = document.getElementById("successMessage");
+      successEl.textContent = message;
+      successEl.classList.remove("hidden");
+
+      setTimeout(() => {
+        successEl.classList.add("hidden");
+      }, 3000);
+    }
+
+    // Enter en buscador
+    document.getElementById("searchKey").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        searchLinks();
+      }
+    });
+  </script>
+</body>
+</html>

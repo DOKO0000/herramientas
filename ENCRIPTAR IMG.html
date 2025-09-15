@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encriptador de Imágenes a Texto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #1a2980, #26d0ce);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo i {
+            font-size: 2.8rem;
+        }
+        
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            height: 100%;
+        }
+        
+        .section-title {
+            font-size: 1.6rem;
+            color: #1a2980;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #26d0ce;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #1a2980;
+            border-radius: 12px;
+            padding: 35px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 25px;
+        }
+        
+        .upload-area:hover {
+            background: rgba(26, 41, 128, 0.05);
+            transform: translateY(-3px);
+        }
+        
+        .upload-area i {
+            font-size: 3.5rem;
+            color: #1a2980;
+            margin-bottom: 18px;
+        }
+        
+        .upload-text {
+            color: #555;
+            margin-bottom: 18px;
+            font-size: 1.1rem;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #1a2980, #26d0ce);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            margin-top: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn i {
+            font-size: 1.3rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #1a2980;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 41, 128, 0.2);
+        }
+        
+        .image-preview {
+            margin-top: 25px;
+            text-align: center;
+        }
+        
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        #preview, #decryptedPreview {
+            max-width: 100%;
+            max-height: 220px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+            border: 2px solid #eee;
+        }
+        
+        .encrypted-text {
+            width: 100%;
+            height: 170px;
+            padding: 18px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 1rem;
+            resize: none;
+            background: #f5f5f5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 18px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-copy {
+            background: linear-gradient(90deg, #1a2980, #3a4cd4);
+        }
+        
+        .btn-save {
+            background: linear-gradient(90deg, #158f47, #2ecc71);
+        }
+        
+        .btn-load {
+            background: linear-gradient(90deg, #1662c4, #3498db);
+        }
+        
+        .security-info {
+            background: #e8f4fc;
+            border-left: 5px solid #2980b9;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .security-info h3 {
+            color: #2980b9;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 0;
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4caf50;
+        }
+        
+        .status-dot.error {
+            background: #f44336;
+        }
+        
+        footer {
+            background: #1a2980;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 1rem;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 18px 24px;
+            background: #27ae60;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 7px 18px rgba(0, 0, 0, 0.25);
+            transform: translateX(100%);
+            transition: transform 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 400px;
+        }
+        
+        .notification.error {
+            background: #e74c3c;
+        }
+        
+        .notification.warning {
+            background: #f39c12;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #fff;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .download-btn {
+            background: linear-gradient(90deg, #158f47, #2ecc71);
+            margin-top: 20px;
+            width: 100%;
+            justify-content: center;
+            display: none;
+        }
+        
+        .encryption-strength {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.3s, background 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-lock"></i>
+                <h1>Encriptador de Imágenes a Texto</h1>
+            </div>
+            <p class="subtitle">Convierte imágenes a texto encriptado con una clave única y guarda en Firebase</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="panel">
+                <h2 class="section-title"><i class="fas fa-lock"></i> Encriptar Imagen</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p class="upload-text">Haz clic o arrastra una imagen aquí</p>
+                    <button class="btn"><i class="fas fa-upload"></i> Seleccionar Imagen</button>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                </div>
+                
+                <div class="image-preview">
+                    <p class="preview-title">Vista previa:</p>
+                    <img id="preview" alt="Vista previa de la imagen">
+                </div>
+                
+                <div class="form-group">
+                    <label for="encryptionKey">Palabra clave de encriptación:</label>
+                    <input type="password" id="encryptionKey" placeholder="Ingresa una palabra clave segura">
+                    <div class="encryption-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="encryptionKeyConfirm">Confirmar palabra clave:</label>
+                    <input type="password" id="encryptionKeyConfirm" placeholder="Repite tu palabra clave">
+                </div>
+                
+                <div class="status-indicator" id="keyStatus">
+                    <div class="status-dot"></div>
+                    <span>Las claves coinciden</span>
+                </div>
+                
+                <button class="btn" id="encryptBtn"><i class="fas fa-lock"></i> Encriptar Imagen</button>
+                
+                <div class="security-info">
+                    <h3><i class="fas fa-shield-alt"></i> Información de Seguridad</h3>
+                    <p>Tu imagen se convierte a Base64 y se encripta con una clave derivada de tu palabra clave. Cada encriptación es única incluso con la misma clave debido a un salt aleatorio.</p>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2 class="section-title"><i class="fas fa-unlock"></i> Desencriptar Imagen</h2>
+                
+                <div class="form-group">
+                    <label for="encryptedData">Texto encriptado:</label>
+                    <textarea id="encryptedData" class="encrypted-text" placeholder="Pega aquí el texto encriptado"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="decryptionKey">Palabra clave:</label>
+                    <input type="password" id="decryptionKey" placeholder="Ingresa la palabra clave de encriptación">
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-load" id="loadBtn"><i class="fas fa-download"></i> Cargar desde Firebase</button>
+                    <button class="btn" id="decryptBtn"><i class="fas fa-unlock"></i> Desencriptar Imagen</button>
+                </div>
+                
+                <div class="status-indicator" id="decryptionStatus">
+                    <div class="status-dot"></div>
+                    <span>Esperando datos para desencriptar</span>
+                </div>
+                
+                <div class="image-preview">
+                    <p class="preview-title">Imagen Desencriptada:</p>
+                    <img id="decryptedPreview" alt="Vista previa de la imagen desencriptada">
+                </div>
+                
+                <button class="btn download-btn" id="downloadBtn"><i class="fas fa-download"></i> Descargar Imagen</button>
+                
+                <div class="security-info">
+                    <h3><i class="fas fa-key"></i> Proceso de Desencriptación</h3>
+                    <p>El sistema toma el texto encriptado y la palabra clave para reconstruir la imagen original. Si la clave es incorrecta, la desencriptación fallará.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 Encriptador de Imágenes a Texto | Cada encriptación es única y segura</p>
+        </footer>
+    </div>
+    
+    <div class="notification" id="notification">
+        <span class="spinner" id="notificationSpinner"></span>
+        <span id="notificationText">Operación completada con éxito</span>
+    </div>
+
+    <!-- Firebase App -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <!-- Firebase Database -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Configuración de Firebase con las nuevas reglas
+        const firebaseConfig = {
+            databaseURL: "https://base-de-datos-ip-alupnos-default-rtdb.firebaseio.com/"
+        };
+        
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // Elementos DOM
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const encryptionKey = document.getElementById('encryptionKey');
+        const encryptionKeyConfirm = document.getElementById('encryptionKeyConfirm');
+        const strengthBar = document.getElementById('strengthBar');
+        const keyStatus = document.getElementById('keyStatus');
+        const encryptBtn = document.getElementById('encryptBtn');
+        const encryptedData = document.getElementById('encryptedData');
+        const loadBtn = document.getElementById('loadBtn');
+        const decryptionKey = document.getElementById('decryptionKey');
+        const decryptBtn = document.getElementById('decryptBtn');
+        const decryptedPreview = document.getElementById('decryptedPreview');
+        const decryptionStatus = document.getElementById('decryptionStatus');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        const notificationSpinner = document.getElementById('notificationSpinner');
+        
+        let currentImageFile = null;
+        let encryptedResult = "";
+        
+        // Event Listeners
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(26, 41, 128, 0.1)';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.background = '';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = '';
+            
+            if (e.dataTransfer.files.length) {
+                handleImageFile(e.dataTransfer.files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                handleImageFile(fileInput.files[0]);
+            }
+        });
+        
+        encryptionKey.addEventListener('input', checkPasswordStrength);
+        encryptionKeyConfirm.addEventListener('input', checkKeysMatch);
+        
+        encryptBtn.addEventListener('click', encryptImage);
+        loadBtn.addEventListener('click', loadFromFirebase);
+        decryptBtn.addEventListener('click', decryptImage);
+        downloadBtn.addEventListener('click', downloadImage);
+        
+        // Funciones
+        function handleImageFile(file) {
+            if (!file.type.match('image.*')) {
+                showNotification('Por favor, selecciona solo archivos de imagen', false, true);
+                return;
+            }
+            
+            currentImageFile = file;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function checkPasswordStrength() {
+            const password = encryptionKey.value;
+            let strength = 0;
+            
+            if (password.length > 5) strength += 20;
+            if (password.length > 8) strength += 20;
+            if (/[A-Z]/.test(password)) strength += 20;
+            if (/[0-9]/.test(password)) strength += 20;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+            
+            strengthBar.style.width = strength + '%';
+            
+            if (strength < 40) {
+                strengthBar.style.background = '#e74c3c';
+            } else if (strength < 80) {
+                strengthBar.style.background = '#f39c12';
+            } else {
+                strengthBar.style.background = '#2ecc71';
+            }
+        }
+        
+        function checkKeysMatch() {
+            if (encryptionKey.value && encryptionKeyConfirm.value) {
+                if (encryptionKey.value === encryptionKeyConfirm.value) {
+                    keyStatus.innerHTML = '<div class="status-dot"></div><span>Las claves coinciden</span>';
+                } else {
+                    keyStatus.innerHTML = '<div class="status-dot error"></div><span>Las claves no coinciden</span>';
+                }
+            }
+        }
+        
+        function encryptImage() {
+            if (!currentImageFile) {
+                showNotification('Por favor, selecciona una imagen primero', false, true);
+                return;
+            }
+            
+            if (!encryptionKey.value) {
+                showNotification('Por favor, ingresa una palabra clave', false, true);
+                return;
+            }
+            
+            if (encryptionKey.value !== encryptionKeyConfirm.value) {
+                showNotification('Las palabras clave no coinciden', false, true);
+                return;
+            }
+            
+            showNotification('Encriptando imagen...', true);
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Generamos un salt único para esta encriptación
+                const salt = generateSalt(16);
+                
+                // Convertimos la imagen a Base64
+                const base64Data = e.target.result;
+                
+                // Creamos un texto combinado para encriptar
+                const dataToEncrypt = `${base64Data}|${salt}|${Date.now()}`;
+                
+                // Encriptamos con una clave derivada
+                const derivedKey = deriveKey(encryptionKey.value, salt);
+                encryptedResult = btoa(JSON.stringify({
+                    data: xorEncrypt(dataToEncrypt, derivedKey),
+                    salt: salt
+                }));
+                
+                // Guardamos automáticamente en Firebase
+                saveToFirebase(encryptedResult);
+            };
+            reader.readAsDataURL(currentImageFile);
+        }
+        
+        function decryptImage() {
+            if (!encryptedData.value) {
+                showNotification('No hay datos encriptados para desencriptar', false, true);
+                return;
+            }
+            
+            if (!decryptionKey.value) {
+                showNotification('Por favor, ingresa la palabra clave', false, true);
+                return;
+            }
+            
+            showNotification('Desencriptando imagen...', true);
+            
+            try {
+                // Parseamos los datos encriptados
+                const encryptedObject = JSON.parse(atob(encryptedData.value));
+                
+                // Derivamos la clave con el salt
+                const derivedKey = deriveKey(decryptionKey.value, encryptedObject.salt);
+                
+                // Desencriptamos los datos
+                const decryptedDataText = xorDecrypt(encryptedObject.data, derivedKey);
+                const parts = decryptedDataText.split('|');
+                
+                if (parts.length < 3) {
+                    throw new Error('Formato de datos encriptados inválido');
+                }
+                
+                // La primera parte es la imagen en Base64
+                const imageBase64 = parts[0];
+                
+                // Mostramos la imagen desencriptada
+                decryptedPreview.src = imageBase64;
+                decryptedPreview.style.display = 'block';
+                downloadBtn.style.display = 'block';
+                
+                decryptionStatus.innerHTML = '<div class="status-dot"></div><span>Imagen desencriptada correctamente</span>';
+                showNotification('Imagen desencriptada correctamente', false);
+            } catch (error) {
+                decryptionStatus.innerHTML = '<div class="status-dot error"></div><span>Error en la desencriptación: ' + error.message + '</span>';
+                showNotification('Error al desencriptar: ' + error.message, false, true);
+            }
+        }
+        
+        function generateSalt(length) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+        
+        function deriveKey(password, salt) {
+            // Una función para derivar una clave
+            let key = '';
+            for (let i = 0; i < 32; i++) {
+                const charCode = password.charCodeAt(i % password.length) ^ salt.charCodeAt(i % salt.length);
+                key += String.fromCharCode(charCode);
+            }
+            return key;
+        }
+        
+        function xorEncrypt(text, key) {
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return result;
+        }
+        
+        function xorDecrypt(text, key) {
+            return xorEncrypt(text, key); // XOR encryption is symmetric
+        }
+        
+        function saveToFirebase(data) {
+            showNotification('Guardando en Firebase...', true);
+            
+            // Generamos una clave única para esta encriptación
+            const encryptionId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+            
+            // Guardamos en Firebase
+            database.ref('encryptedImages/' + encryptionId).set({
+                data: data,
+                timestamp: Date.now()
+            })
+            .then(() => {
+                encryptedData.value = data;
+                showNotification('Imagen encriptada y guardada en Firebase correctamente. ID: ' + encryptionId, false);
+            })
+            .catch((error) => {
+                showNotification('Error al guardar en Firebase: ' + error.message, false, true);
+            });
+        }
+        
+        function loadFromFirebase() {
+            showNotification('Cargando desde Firebase...', true);
+            
+            // Leemos desde Firebase
+            database.ref('encryptedImages').limitToLast(5).once('value')
+            .then((snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // Tomamos la más reciente
+                    const keys = Object.keys(data);
+                    const latestKey = keys[keys.length - 1];
+                    encryptedData.value = data[latestKey].data;
+                    showNotification('Datos cargados desde Firebase. ID: ' + latestKey, false);
+                } else {
+                    showNotification('No hay datos en Firebase', false, true);
+                }
+            })
+            .catch((error) => {
+                showNotification('Error al cargar desde Firebase: ' + error.message, false, true);
+            });
+        }
+        
+        function downloadImage() {
+            if (!decryptedPreview.src) {
+                showNotification('No hay imagen para descargar', false, true);
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.download = 'imagen-desencriptada.png';
+            link.href = decryptedPreview.src;
+            link.click();
+            
+            showNotification('Imagen descargada correctamente', false);
+        }
+        
+        function showNotification(message, isProgress, isError = false) {
+            notificationText.textContent = message;
+            notificationSpinner.style.display = isProgress ? 'inline-block' : 'none';
+            
+            notification.className = 'notification';
+            if (isError) {
+                notification.classList.add('error');
+            }
+            notification.classList.add('show');
+            
+            if (!isProgress) {
+                setTimeout(() => {
+                    notification.className = 'notification';
+                }, 4000);
+            }
+        }
+    </script>
+</body>
+</html>
