@@ -1,125 +1,367 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Herramientas de Encriptación</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body {
-      background: linear-gradient(135deg, #1a2980, #26d0ce);
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .glass-effect {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    }
-    .tool-card {
-      transition: all 0.3s ease;
-    }
-    .tool-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-    }
-    .github-btn {
-      transition: all 0.2s ease;
-    }
-    .github-btn:hover {
-      transform: scale(1.05);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramientas de Encriptación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo i {
+            font-size: 3.5rem;
+            color: #fff;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .tools-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .tool-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tool-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .img-encryptor .tool-icon {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+        }
+        
+        .link-encryptor .tool-icon {
+            background: linear-gradient(135deg, #9C27B0, #E91E63);
+        }
+        
+        .tool-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .tool-description {
+            margin-bottom: 25px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .features {
+            margin-bottom: 25px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .feature i {
+            color: #26d0ce;
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, #1a2980, #26d0ce);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 1000px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .instructions h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .instructions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .instruction-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .instruction-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .instruction-card ul {
+            list-style-type: none;
+        }
+        
+        .instruction-card li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .instruction-card li i {
+            color: #26d0ce;
+            margin-top: 4px;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .tools-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tool-card {
+                width: 100%;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-  <div class="w-full max-w-4xl mx-auto">
-    <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-white mb-2">🔒 Suite de Herramientas de Encriptación</h1>
-      <p class="text-white opacity-80">Accede a nuestras herramientas de encriptación alojadas en GitHub</p>
+<body>
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-lock"></i>
+            <h1>Herramientas de Encriptación</h1>
+        </div>
+        <p class="subtitle">Accede a nuestras herramientas de encriptación alojadas en GitHub</p>
     </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Tarjeta para Encriptador de Enlaces -->
-      <div class="tool-card glass-effect p-6">
-        <div class="flex items-center mb-4">
-          <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mr-3">
-            <i class="fas fa-link text-white text-xl"></i>
-          </div>
-          <h2 class="text-2xl font-semibold text-white">Encriptador de Enlaces</h2>
+    
+    <div class="tools-container">
+        <!-- Encriptador de Imágenes -->
+        <div class="tool-card img-encryptor">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-image"></i>
+                </div>
+                <h2 class="tool-title">Encriptador de Imágenes</h2>
+            </div>
+            <p class="tool-description">
+                Convierte imágenes a texto encriptado con una clave única y guárdalas en Firebase de forma segura.
+            </p>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Encriptación con clave personalizada</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Almacenamiento en Firebase</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Recuperación con la clave correcta</span>
+                </div>
+            </div>
+            <div class="btn-container">
+                <a href="ENCRIPTAR%20IMG.html" class="btn btn-primary">
+                    <i class="fas fa-external-link-alt"></i> Abrir Herramienta
+                </a>
+                <a href="https://github.com/DOKO0000/herramientas/blob/main/ENCRIPTAR%20IMG.html" class="btn btn-secondary">
+                    <i class="fab fa-github"></i> Ver Código
+                </a>
+            </div>
         </div>
-        <p class="text-white/80 mb-6">
-          Guarda tus enlaces de forma segura en Firebase y recupéralos con tu palabra clave personal.
-        </p>
-        <div class="flex flex-wrap gap-2">
-          <a href="https://DOKO0000.github.io/herramientas/enlases.html" 
-             class="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-2 px-4 rounded-lg font-semibold text-center hover:from-blue-600 hover:to-cyan-600 transition-all duration-200">
-            Abrir Herramienta
-          </a>
-          <a href="https://github.com/DOKO0000/herramientas/blob/main/enlases.html" 
-             class="github-btn bg-gray-800 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center hover:bg-gray-900 transition-all duration-200">
-            <i class="fab fa-github mr-2"></i> Código
-          </a>
+        
+        <!-- Encriptador de Enlaces -->
+        <div class="tool-card link-encryptor">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-link"></i>
+                </div>
+                <h2 class="tool-title">Encriptador de Enlaces</h2>
+            </div>
+            <p class="tool-description">
+                Guarda tus enlaces de forma segura en Firebase y recupéralos con tu palabra clave personal.
+            </p>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Encriptación AES avanzada</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Almacenamiento seguro en la nube</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Búsqueda con palabra clave</span>
+                </div>
+            </div>
+            <div class="btn-container">
+                <a href="enlases.html" class="btn btn-primary">
+                    <i class="fas fa-external-link-alt"></i> Abrir Herramienta
+                </a>
+                <a href="https://github.com/DOKO0000/herramientas/blob/main/enlases.html" class="btn btn-secondary">
+                    <i class="fab fa-github"></i> Ver Código
+                </a>
+            </div>
         </div>
-      </div>
-
-      <!-- Tarjeta para Encriptador de Imágenes -->
-      <div class="tool-card glass-effect p-6">
-        <div class="flex items-center mb-4">
-          <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mr-3">
-            <i class="fas fa-image text-white text-xl"></i>
-          </div>
-          <h2 class="text-2xl font-semibold text-white">Encriptador de Imágenes</h2>
-        </div>
-        <p class="text-white/80 mb-6">
-          Convierte imágenes a texto encriptado con una clave única y guárdalas en Firebase.
-        </p>
-        <div class="flex flex-wrap gap-2">
-          <a href="https://DOKO0000.github.io/herramientas/ENCRIPTAR%20IMG.html" 
-             class="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 px-4 rounded-lg font-semibold text-center hover:from-green-600 hover:to-teal-600 transition-all duration-200">
-            Abrir Herramienta
-          </a>
-          <a href="https://github.com/DOKO0000/herramientas/blob/main/ENCRIPTAR%20IMG.html" 
-             class="github-btn bg-gray-800 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center hover:bg-gray-900 transition-all duration-200">
-            <i class="fab fa-github mr-2"></i> Código
-          </a>
-        </div>
-      </div>
     </div>
-
-    <div class="glass-effect p-6 mt-8">
-      <h2 class="text-2xl font-semibold text-white mb-4">📋 Instrucciones de Uso</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-white/10 p-4 rounded-lg">
-          <h3 class="text-white font-semibold mb-2 flex items-center">
-            <i class="fas fa-link mr-2"></i> Para el Encriptador de Enlaces
-          </h3>
-          <ul class="text-white/80 text-sm space-y-1">
-            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Ingresa la URL que deseas encriptar</li>
-            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Agrega un título opcional</li>
-            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Establece una palabra clave segura</li>
-            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Recupera tus enlaces con la misma palabra clave</li>
-          </ul>
+    
+    <div class="instructions">
+        <h2>Instrucciones de Uso</h2>
+        <div class="instructions-container">
+            <div class="instruction-card">
+                <h3><i class="fas fa-image"></i> Encriptador de Imágenes</h3>
+                <ul>
+                    <li><i class="fas fa-check"></i> Selecciona o arrastra una imagen a encriptar</li>
+                    <li><i class="fas fa-check"></i> Establece una palabra clave segura</li>
+                    <li><i class="fas fa-check"></i> Confirma tu palabra clave</li>
+                    <li><i class="fas fa-check"></i> Haz clic en "Encriptar Imagen"</li>
+                    <li><i class="fas fa-check"></i> Guarda el texto encriptado generado</li>
+                    <li><i class="fas fa-check"></i> Para recuperar, pega el texto y usa tu clave</li>
+                </ul>
+            </div>
+            <div class="instruction-card">
+                <h3><i class="fas fa-link"></i> Encriptador de Enlaces</h3>
+                <ul>
+                    <li><i class="fas fa-check"></i> Ingresa la URL que deseas encriptar</li>
+                    <li><i class="fas fa-check"></i> Añade un título opcional para identificar el enlace</li>
+                    <li><i class="fas fa-check"></i> Establece una palabra clave segura</li>
+                    <li><i class="fas fa-check"></i> Haz clic en "Encriptar y Guardar"</li>
+                    <li><i class="fas fa-check"></i> Para recuperar, ingresa tu palabra clave y haz clic en "Buscar"</li>
+                    <li><i class="fas fa-check"></i> Copia o visita los enlaces recuperados</li>
+                </ul>
+            </div>
         </div>
-        <div class="bg-white/10 p-4 rounded-lg">
-          <h3 class="text-white font-semibold mb-2 flex items-center">
-            <i class="fas fa-image mr-2"></i> Para el Encriptador de Imágenes
-          </h3>
-          <ul class="text-white/80 text-sm space-y-1">
-            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Selecciona o arrastra una imagen</li>
-            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Establece y confirma tu palabra clave</li>
-            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Encripta y guarda en Firebase</li>
-            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Recupera con la palabra clave correcta</li>
-          </ul>
-        </div>
-      </div>
     </div>
-
-    <div class="text-center mt-8 text-white opacity-60">
-      <p>© 2023 Suite de Herramientas de Encriptación | Alojado en GitHub Pages</p>
-    </div>
-  </div>
+    
+    <footer>
+        <p>© 2023 Herramientas de Encriptación | Alojado en GitHub Pages</p>
+        <p>Visita el repositorio: <a href="https://github.com/DOKO0000/herramientas" style="color: #fff;">https://github.com/DOKO0000/herramientas</a></p>
+    </footer>
 </body>
 </html>
