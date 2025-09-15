@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herramientas de Encriptación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #1a2980, #26d0ce);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+    .tool-card {
+      transition: all 0.3s ease;
+    }
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    }
+    .github-btn {
+      transition: all 0.2s ease;
+    }
+    .github-btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-4xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2">🔒 Suite de Herramientas de Encriptación</h1>
+      <p class="text-white opacity-80">Accede a nuestras herramientas de encriptación alojadas en GitHub</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Tarjeta para Encriptador de Enlaces -->
+      <div class="tool-card glass-effect p-6">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mr-3">
+            <i class="fas fa-link text-white text-xl"></i>
+          </div>
+          <h2 class="text-2xl font-semibold text-white">Encriptador de Enlaces</h2>
+        </div>
+        <p class="text-white/80 mb-6">
+          Guarda tus enlaces de forma segura en Firebase y recupéralos con tu palabra clave personal.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <a href="https://tudominio.github.io/turepositorio/enlases.html" 
+             class="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-2 px-4 rounded-lg font-semibold text-center hover:from-blue-600 hover:to-cyan-600 transition-all duration-200">
+            Abrir Herramienta
+          </a>
+          <a href="https://github.com/tudominio/turepositorio/blob/main/enlases.html" 
+             class="github-btn bg-gray-800 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center hover:bg-gray-900 transition-all duration-200">
+            <i class="fab fa-github mr-2"></i> Código
+          </a>
+        </div>
+      </div>
+
+      <!-- Tarjeta para Encriptador de Imágenes -->
+      <div class="tool-card glass-effect p-6">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mr-3">
+            <i class="fas fa-image text-white text-xl"></i>
+          </div>
+          <h2 class="text-2xl font-semibold text-white">Encriptador de Imágenes</h2>
+        </div>
+        <p class="text-white/80 mb-6">
+          Convierte imágenes a texto encriptado con una clave única y guárdalas en Firebase.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <a href="https://tudominio.github.io/turepositorio/ENCRIPTAR%20IMG.html" 
+             class="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 px-4 rounded-lg font-semibold text-center hover:from-green-600 hover:to-teal-600 transition-all duration-200">
+            Abrir Herramienta
+          </a>
+          <a href="https://github.com/tudominio/turepositorio/blob/main/ENCRIPTAR%20IMG.html" 
+             class="github-btn bg-gray-800 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center hover:bg-gray-900 transition-all duration-200">
+            <i class="fab fa-github mr-2"></i> Código
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-effect p-6 mt-8">
+      <h2 class="text-2xl font-semibold text-white mb-4">📋 Instrucciones de Uso</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white/10 p-4 rounded-lg">
+          <h3 class="text-white font-semibold mb-2 flex items-center">
+            <i class="fas fa-link mr-2"></i> Para el Encriptador de Enlaces
+          </h3>
+          <ul class="text-white/80 text-sm space-y-1">
+            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Ingresa la URL que deseas encriptar</li>
+            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Agrega un título opcional</li>
+            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Establece una palabra clave segura</li>
+            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Recupera tus enlaces con la misma palabra clave</li>
+          </ul>
+        </div>
+        <div class="bg-white/10 p-4 rounded-lg">
+          <h3 class="text-white font-semibold mb-2 flex items-center">
+            <i class="fas fa-image mr-2"></i> Para el Encriptador de Imágenes
+          </h3>
+          <ul class="text-white/80 text-sm space-y-1">
+            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Selecciona o arrastra una imagen</li>
+            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Establece y confirma tu palabra clave</li>
+            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Encripta y guarda en Firebase</li>
+            <li><i class="fas fa-check-circle mr-2 text-green-400"></i> Recupera con la palabra clave correcta</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-8 text-white opacity-60">
+      <p>© 2023 Suite de Herramientas de Encriptación | Alojado en GitHub Pages</p>
+    </div>
+  </div>
+</body>
+</html>
